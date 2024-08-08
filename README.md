@@ -10,7 +10,7 @@
 
 ## Installation
 
-You can install `broadpy` using pip:
+You can install `broadpy` by cloning the repository and running `pip install .`:
 
 ```bash
 git clone https://github.com/DGonzalezPicos/broadpy
