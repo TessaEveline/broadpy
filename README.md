@@ -1,6 +1,6 @@
-# BroadPy
+# broadpy
 
-BroadPy is a Python package for the broadening of spectral lines, including Doppler, Lorentz, and Voigt profiles.
+BroadPy is a Python package for the broadening of spectral lines from instrumental and rotational effects. It is designed to be simple, fast and customizable.
 
 ## Features
 
@@ -10,7 +10,7 @@ BroadPy is a Python package for the broadening of spectral lines, including Dopp
 
 ## Installation
 
-You can install BroadPy using pip:
+You can install `broadpy` using pip:
 
 ```bash
 pip install broadpy
@@ -21,9 +21,9 @@ pip install broadpy
 Here's an example of how to use BroadPy:
 
 ```python
-import broadpy
-
-# Example code here
+from broadpy import InstrumentalBroadening
+wave, flux = load_data()
+flux_broadpy_fwhm = InstrumentalBroadening(wave, flux)(fwhm=3.0, kernel='gaussian')
 ```
 
 ## Contributing
