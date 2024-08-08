@@ -1,0 +1,15 @@
+Metadata-Version: 2.1
+Name: broadpy
+Version: 0.1.0
+Summary: A Python package for broadening of spectral lines
+Home-page: https://github.com/DGonzalezPicos/broadpy
+Author: Darío González Picos
+Author-email: picos@strw.leidenuniv.nl
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: matplotlib
