@@ -1,6 +1,6 @@
 # broadpy
 
-BroadPy is a Python package for the broadening of spectral lines from instrumental and rotational effects. It is designed to be simple, fast and customizable.
+`broadpy` is a Python package for the broadening of spectral lines from instrumental and rotational effects. It is designed to be simple, fast and customizable.
 
 ## Features
 
@@ -13,7 +13,9 @@ BroadPy is a Python package for the broadening of spectral lines from instrument
 You can install `broadpy` using pip:
 
 ```bash
-pip install broadpy
+git clone https://github.com/DGonzalezPicos/broadpy
+cd broadpy
+pip install .
 ```
 
 ## Usage
