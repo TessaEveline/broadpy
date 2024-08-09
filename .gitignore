@@ -3,3 +3,6 @@ __pycache__/
 .DS_Store
 .env
 .vscode/
+examples/variable_gaussian_broadening.py
+examples/data/lsf_width.npy
+examples/data/lsf_width.txt
