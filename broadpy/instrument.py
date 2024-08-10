@@ -17,15 +17,15 @@ class InstrumentalBroadening:
 
         self.spacing = np.mean(2*np.diff(self.x) / (self.x[1:] + self.x[:-1]))
     
-    def __call__(self, out_res=None, fwhm=None, gamma=None, kernel='voigt', truncate=4.0):
+    def __call__(self, res=None, fwhm=None, gamma=None, truncate=4.0, kernel='auto'):
         '''Instrumental broadening
         
         provide either instrumental resolution lambda/delta_lambda or FWHM in km/s'''
-        
+        kernel = self.__read_kernel(res=None, fwhm=fwhm, gamma=gamma) if kernel == 'auto' else kernel
         assert kernel in self.available_kernels, 'Please provide a valid kernel: gaussian, lorentzian, voigt'
             
         if kernel in ['gaussian', 'voigt']:
-            fwhm = fwhm if fwhm is not None else (self.c / out_res)
+            fwhm = fwhm if fwhm is not None else (self.c / res)
 
         if kernel == 'gaussian':
             _kernel = self.gaussian_kernel(fwhm, truncate)
@@ -160,3 +160,17 @@ class InstrumentalBroadening:
         kernel = convolve(_kernel_g, _kernel_l, mode='same')
         kernel /= np.sum(kernel)
         return kernel
+    
+    def __read_kernel(self, res=None, fwhm=None, gamma=None):
+        '''Read kernel from the input parameters'''
+        if res is not None:
+            return 'gaussian'
+        if fwhm is not None and gamma is None:
+            return 'gaussian'
+        if fwhm is None and gamma is not None:
+            return 'lorentzian'
+        if fwhm is not None and gamma is not None:
+            return 'voigt'
+        if fwhm is not None and isinstance(fwhm, (list, np.ndarray)):
+            return 'gaussian_variable'
+        raise ValueError('Please provide a valid kernel: gaussian, lorentzian, voigt')
