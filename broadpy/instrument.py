@@ -7,7 +7,7 @@ class InstrumentalBroadening:
     c = 2.998e5 # km/s
     sqrt8ln2 = np.sqrt(8 * np.log(2))
     
-    available_kernels = ['gaussian', 'lorentzian', 'voigt', 'gaussian_variable']
+    available_kernels = ['gaussian', 'lorentzian', 'voigt', 'gaussian_variable', 'auto']
     
     def __init__(self, x, y):
         
@@ -21,8 +21,8 @@ class InstrumentalBroadening:
         '''Instrumental broadening
         
         provide either instrumental resolution lambda/delta_lambda or FWHM in km/s'''
-        kernel = self.__read_kernel(res=None, fwhm=fwhm, gamma=gamma) if kernel == 'auto' else kernel
-        assert kernel in self.available_kernels, 'Please provide a valid kernel: gaussian, lorentzian, voigt'
+        kernel = self.__read_kernel(res=res, fwhm=fwhm, gamma=gamma) if kernel == 'auto' else kernel
+        assert kernel in self.available_kernels, f'Please provide a valid kernel: {self.available_kernels}'
             
         if kernel in ['gaussian', 'voigt']:
             fwhm = fwhm if fwhm is not None else (self.c / res)
@@ -173,4 +173,4 @@ class InstrumentalBroadening:
             return 'voigt'
         if fwhm is not None and isinstance(fwhm, (list, np.ndarray)):
             return 'gaussian_variable'
-        raise ValueError('Please provide a valid kernel: gaussian, lorentzian, voigt')
+        raise ValueError(f'Please provide a valid kernel: {self.available_kernels}')
