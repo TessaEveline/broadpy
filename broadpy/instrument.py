@@ -1,13 +1,18 @@
 import numpy as np
 from scipy.signal import convolve 
 from scipy.ndimage import convolve1d # suitable for 'same' output shape as input
+from scipy.special import voigt_profile
 
 class InstrumentalBroadening:
     
     c = 2.998e5 # km/s
     sqrt8ln2 = np.sqrt(8 * np.log(2))
     
-    available_kernels = ['gaussian', 'lorentzian', 'voigt', 'gaussian_variable', 'auto']
+    available_kernels = ['gaussian',
+                         'lorentzian', 
+                         'voigt',
+                         'gaussian_variable',
+                         'auto']
     
     def __init__(self, x, y):
         
@@ -23,7 +28,8 @@ class InstrumentalBroadening:
         provide either instrumental resolution lambda/delta_lambda or FWHM in km/s'''
         kernel = self.__read_kernel(res=res, fwhm=fwhm, gamma=gamma) if kernel == 'auto' else kernel
         assert kernel in self.available_kernels, f'Please provide a valid kernel: {self.available_kernels}'
-            
+        # print(f' Applying {kernel} kernel')
+        
         if kernel in ['gaussian', 'voigt']:
             fwhm = fwhm if fwhm is not None else (self.c / res)
 
@@ -135,30 +141,37 @@ class InstrumentalBroadening:
         kernel /= np.sum(kernel)
         return kernel
     
-    def voigt_kernel(self, fwhm, gamma, truncate=4.0):
-        ''' Voigt kernel from the convolution of Gaussian and Lorentzian kernels
     
+    def voigt_kernel(self, fwhm, gamma, truncate=4.0):
+        ''' Voigt kernel using scipy.special.voigt_profile
+        
         Parameters
         ----------
         fwhm : float
             Full width at half maximum of the Gaussian kernel in km/s
         gamma : float
-            Full width at half maximum of the Lorentzian kernel in km/s
+            Half width at half maximum of the Lorentzian kernel in km/s
         truncate : float
-            Extent of the kernel as a multiple of gamma (default: 5)
+            Extent of the kernel as a multiple of the standard deviation (default: 4.0)
         
         Returns
         -------
         kernel : array
             Convolution kernel
         '''        
-        _kernel_g = self.gaussian_kernel(fwhm, truncate)
-        _kernel_l = self.lorentz_kernel(gamma, truncate)
+        sigma = (fwhm / self.c) / self.sqrt8ln2 / self.spacing
+        gamma_pixels = gamma / self.c / self.spacing
+        lw = int(truncate * max(sigma, gamma_pixels) + 0.5)
         
-        # note: here we use scipy.signal convolve instead of scipy.ndimage convolve1d
-        # this way we use the strict definition of convolution (commutative)
-        kernel = convolve(_kernel_g, _kernel_l, mode='same')
+        # Define the kernel range
+        kernel_x = np.arange(-lw, lw + 1)
+
+        # Create the Voigt profile using scipy.special.voigt_profile
+        kernel = voigt_profile(kernel_x, sigma, gamma_pixels)
+        
+        # Normalize the kernel
         kernel /= np.sum(kernel)
+        
         return kernel
     
     def __read_kernel(self, res=None, fwhm=None, gamma=None):
