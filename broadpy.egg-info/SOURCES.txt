@@ -4,6 +4,8 @@ pyproject.toml
 setup.py
 broadpy/__init__.py
 broadpy/instrument.py
+broadpy/rotation.py
+broadpy/utils.py
 broadpy.egg-info/PKG-INFO
 broadpy.egg-info/SOURCES.txt
 broadpy.egg-info/dependency_links.txt

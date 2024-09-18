@@ -1,2 +1,3 @@
 from broadpy.instrument import InstrumentalBroadening
+from broadpy.instrument_jax import InstrumentalBroadening as InstrumentalBroadeningJax
 from broadpy.rotation import RotationalBroadening
