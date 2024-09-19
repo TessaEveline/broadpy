@@ -49,7 +49,8 @@ class InstrumentalBroadening:
             assert len(fwhm) == len(self.x), 'FWHM list should have the same length as the wavelength array'
             _kernels, lw = self.gaussian_variable_kernel(fwhm, truncate)
             y_pad = np.pad(self.y, (lw, lw), mode='reflect')
-            y_matrix = np.array([y_pad[i:i + len(self.y)] for i in range(2 * lw + 1)]).T
+            # y_matrix = np.array([y_pad[i:i + len(self.y)] for i in range(2 * lw + 1)]).T
+            y_matrix = np.lib.stride_tricks.sliding_window_view(y_pad, window_shape=(2 * lw + 1))
             y_lsf = np.einsum('ij, ij->i', _kernels, y_matrix)
             return y_lsf
             
