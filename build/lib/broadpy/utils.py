@@ -3,7 +3,8 @@ import pathlib
 from astropy.io import fits
 
 # get path of current script
-path = pathlib.Path('/'.join(str(pathlib.Path(__file__).parent.absolute()).split('/')[:-1]))
+path = '/net/lem/data2/tvdpost/broadpy'
+#path = pathlib.Path('/'.join(str(pathlib.Path(__file__).parent.absolute()).split('/')[:-1]))
 
 def load_example_data(wave_range=(2320.0, 2330.0), jwst=False):
     
